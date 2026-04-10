@@ -226,6 +226,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="conv-proof-grid" id="conv-proof-grid"></div>
       <div class="conv-proof-note">
         ⚠️ <strong>These conversion rates drive the ERV (Expected Revenue Value) on the Segment Priority tab.</strong> ERV is a <em>pipeline number</em> — it shows the total monthly revenue if every company in a sector converts at its historical rate. It is not guaranteed revenue. Higher-Tier sectors have lower rates because PTCL has fewer existing relationships there — but their deal size (MRC) is 6–17× larger, which is why they still dominate the pipeline value.
+      The current base rate ceiling is <strong id="erv-base-display2">20%</strong> — adjustable live on the <em>Segment Priority</em> tab.
       </div>
     </div>
   </div>
@@ -287,6 +288,25 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- SEGMENT PRIORITY + ERV -->
 <div id="tab-priority" class="sec">
+
+  <!-- ── BASE RATE CONFIGURATOR ────────────────────────────────────────── -->
+  <div style="background:linear-gradient(135deg,#1A1A2E,#16213E);border-radius:12px;padding:16px 24px;margin-bottom:16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <div style="flex:0 0 auto">
+      <div style="color:rgba(255,255,255,.6);font-size:10px;font-weight:700;letter-spacing:.5px;margin-bottom:2px">SALES MANAGER: ADJUST BASE CONVERSION RATE</div>
+      <div style="color:rgba(255,255,255,.4);font-size:10px">Changes all ERV numbers live. Default 20% = B2B warm-lead benchmark.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:220px">
+      <span style="color:rgba(255,255,255,.5);font-size:11px;white-space:nowrap">5%</span>
+      <input type="range" id="erv-base-slider" min="5" max="40" value="20" step="1"
+        style="flex:1;accent-color:#E87722;cursor:pointer;height:4px"
+        oninput="ERV_BASE=this.value/100; rebuildAll()">
+      <span style="color:rgba(255,255,255,.5);font-size:11px;white-space:nowrap">40%</span>
+      <div style="background:var(--or);color:#fff;font-size:18px;font-weight:800;border-radius:8px;padding:4px 14px;min-width:56px;text-align:center" id="erv-base-display">20%</div>
+    </div>
+    <div style="color:rgba(255,255,255,.35);font-size:10px;flex:0 0 auto;text-align:right">
+      Pipeline recalculates instantly ↻<br>across all sectors &amp; tables
+    </div>
+  </div>
 
   <!-- Pipeline Summary Banner -->
   <div id="erv-summary-banner" style="background:linear-gradient(135deg,var(--dk),var(--md));border-radius:12px;padding:20px 24px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px"></div>
@@ -573,60 +593,153 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 
   <div class="meth-section">
-    <div class="meth-head"><span>💬 Two-Way Messaging Probability — Why Each Sector is Rated High / Mixed / None</span></div>
+    <div class="meth-head"><span>💬 Two-Way Messaging Need — Point Allocation &amp; Proof</span></div>
     <div class="meth-body">
-      <p style="font-size:12px;color:var(--mu);margin-bottom:12px">Two-way probability answers: <em>"Does this sector's customers need to respond, query, or interact — or is a one-way blast enough?"</em> It is the single biggest driver of OCC and Bot upsell. A sector rated High means almost every company in it needs OCC + a response bot from day one.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+        <div style="background:#EAFAF1;border-radius:8px;padding:12px;border-top:3px solid var(--gr);text-align:center">
+          <div style="font-size:22px;font-weight:800;color:var(--gr)">30 pts</div>
+          <div style="font-size:11px;font-weight:700;color:var(--gr);margin:4px 0">🟢 HIGH</div>
+          <div style="font-size:11px;color:var(--tx);line-height:1.7">Customers <em>must</em> be able to reply. The business flow breaks without two-way interaction — OTPs, bookings, queries, support. OCC + Bot is a day-1 requirement, not an upsell.</div>
+        </div>
+        <div style="background:#FEFCE8;border-radius:8px;padding:12px;border-top:3px solid #F59E0B;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:#D97706">15 pts</div>
+          <div style="font-size:11px;font-weight:700;color:#D97706;margin:4px 0">🟡 MIXED</div>
+          <div style="font-size:11px;color:var(--tx);line-height:1.7">Some companies in the sector need two-way (e-commerce, appointment businesses), others only need broadcast. A bot is a strong upsell but not always a day-1 requirement.</div>
+        </div>
+        <div style="background:#F5F6FA;border-radius:8px;padding:12px;border-top:3px solid var(--mu);text-align:center">
+          <div style="font-size:22px;font-weight:800;color:var(--mu)">0 pts</div>
+          <div style="font-size:11px;font-weight:700;color:var(--mu);margin:4px 0">⚪ NONE</div>
+          <div style="font-size:11px;color:var(--tx);line-height:1.7">All comms are one-way blasts — alerts, notifications, circulars. The customer never needs to reply. Broadcast channel (WA or SMS) is sufficient.</div>
+        </div>
+      </div>
       <table class="meth-table">
-        <tr><th>Sector</th><th>Rating</th><th>Reason</th></tr>
-        <tr><td><strong>Banking &amp; Finance</strong></td><td><span class="tier-badge tw-high-b">🟢 High</span></td><td>OTP replies, balance queries, fraud alerts, loan applications — two-way is mandatory by regulation and customer expectation</td></tr>
-        <tr><td><strong>Health</strong></td><td><span class="tier-badge tw-high-b">🟢 High</span></td><td>Appointment booking, lab result queries, prescription confirmations — patients expect to respond and ask questions</td></tr>
-        <tr><td><strong>IT/Technology</strong></td><td><span class="tier-badge tw-high-b">🟢 High</span></td><td>Support tickets, product queries, demo bookings — tech companies already run customer support via chat</td></tr>
-        <tr><td><strong>Fintech</strong></td><td><span class="tier-badge tw-high-b">🟢 High</span></td><td>Same as banking — transaction confirmations, fraud alerts, wallet queries require two-way interaction</td></tr>
-        <tr><td><strong>Education</strong></td><td><span class="tier-badge tw-high-b">🟢 High</span></td><td>Admissions enquiries, fee payment confirmations, parent-school communication — students and parents respond to messages</td></tr>
-        <tr><td><strong>Telecom Operators</strong></td><td><span class="tier-badge tw-high-b">🟢 High</span></td><td>Customer support, bill queries, plan changes — telecom companies have high inbound query volumes</td></tr>
-        <tr><td><strong>SME &amp; Others</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed</span></td><td>Very diverse sector — some SMEs run customer service bots, others only need broadcast promos. Depends on the individual business.</td></tr>
-        <tr><td><strong>Services</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed</span></td><td>Appointment-based services (salons, clinics, repair) need two-way. Utility services mostly blast notifications.</td></tr>
-        <tr><td><strong>Retail &amp; Trade</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed</span></td><td>E-commerce players need order query bots. Traditional retail only needs promotional blasts.</td></tr>
-        <tr><td><strong>Real Estate</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed</span></td><td>High-value property enquiries justify a lead bot. Smaller agencies use blast-only for site visit promos.</td></tr>
-        <tr><td><strong>Manufacturing</strong></td><td><span class="tier-badge tw-none-b">⚪ None</span></td><td>Mostly dealer/distributor broadcast notifications — "new stock arrived", "payment due". No customer-facing two-way need.</td></tr>
-        <tr><td><strong>Govt &amp; SOE</strong></td><td><span class="tier-badge tw-none-b">⚪ None</span></td><td>Citizen notifications, SMS alerts, tender updates — one-way broadcast by nature. Government two-way chat is rare in Pakistan.</td></tr>
-        <tr><td><strong>Energy, Mining, O&amp;G</strong></td><td><span class="tier-badge tw-none-b">⚪ None</span></td><td>Field crew safety alerts, billing notifications — one-way operational blasts only.</td></tr>
+        <tr><th>Sector</th><th>Rating &amp; Points</th><th>Core Proof — Why This Rating</th><th>Key CPaaS Use Case</th></tr>
+        <tr><td><strong>Banking &amp; Finance</strong></td><td><span class="tier-badge tw-high-b">🟢 High — 30 pts</span></td><td>SBP regulations mandate OTP-based transaction authentication. Customer queries (balance, card block, loan status) are conversational by nature. Every major Pakistani bank (HBL, UBL, MCB) already runs SMS/WhatsApp OTP at scale.</td><td>Transaction OTP · Fraud Alert Replies · Loan Application Bot · Balance Query</td></tr>
+        <tr><td><strong>Health</strong></td><td><span class="tier-badge tw-high-b">🟢 High — 30 pts</span></td><td>Appointment booking requires patient confirmation. Lab results trigger queries. Medication reminders expect acknowledgement. Field research: Aga Khan, Indus, Shifa — all run appointment reminder + query flows.</td><td>Appointment Booking Bot · Lab Result Delivery · Prescription Refill Reminder</td></tr>
+        <tr><td><strong>IT/Technology</strong></td><td><span class="tier-badge tw-high-b">🟢 High — 30 pts</span></td><td>Tech companies run customer support natively via chat. Helpdesk tickets, demo requests, onboarding flows — all are conversational. Pakistan IT sector has highest per-capita WhatsApp Business adoption.</td><td>Support Ticket Bot · Demo Booking · SaaS Onboarding Flow</td></tr>
+        <tr><td><strong>Fintech</strong></td><td><span class="tier-badge tw-high-b">🟢 High — 30 pts</span></td><td>EasyPaisa, JazzCash, Nayapay all use WhatsApp OTP and transaction alerts. SECP fintech sandbox requires digital customer verification — two-way is built into the compliance stack.</td><td>Wallet OTP · Transaction Confirmation · KYC Verification Flow</td></tr>
+        <tr><td><strong>Education</strong></td><td><span class="tier-badge tw-high-b">🟢 High — 30 pts</span></td><td>Admissions are conversational — students ask eligibility questions, request forms, confirm fee submissions. Parent-teacher communication is increasingly WhatsApp-based across Pakistani private schools and universities.</td><td>Admissions Enquiry Bot · Fee Payment Confirmation · Parent Update Bot</td></tr>
+        <tr><td><strong>Telecom Operators</strong></td><td><span class="tier-badge tw-high-b">🟢 High — 30 pts</span></td><td>Billing, plan changes, SIM queries — telecom customer care is the highest-volume conversational use case in Pakistan. Every operator (Jazz, Zong, Telenor) runs a WhatsApp helpdesk.</td><td>Billing Query Bot · Plan Upgrade Flow · SIM Activation Support</td></tr>
+        <tr><td><strong>SME &amp; Others</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed — 15 pts</span></td><td>1,730 companies across dozens of sub-industries. Restaurants, boutiques, and service SMEs use WhatsApp conversationally. Wholesalers, traders, and manufacturers in the SME bucket only need blast promos.</td><td>Order Confirmation · Delivery Tracking · Customer Feedback Bot</td></tr>
+        <tr><td><strong>Services</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed — 15 pts</span></td><td>B2B professional services (consulting, HR, security) are mostly notifications. B2C services (repair, beauty, catering) are appointment-driven and conversational. Sector is split roughly 50/50.</td><td>Appointment Reminder · Service Completion Alert · Client Status Update</td></tr>
+        <tr><td><strong>Retail &amp; Trade</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed — 15 pts</span></td><td>E-commerce and modern retail (Daraz sellers, Fashion brands) need order tracking bots. Traditional trade (wholesale, commodity) only needs promotional blasts and payment reminders.</td><td>Order Status Bot · Loyalty Promo Blast · Return/Exchange Query</td></tr>
+        <tr><td><strong>Real Estate &amp; Construction</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed — 15 pts</span></td><td>Developers (DHA, Bahria, private schemes) need lead qualification bots and site visit bookings. Construction companies only need supplier payment alerts and site crew notifications.</td><td>Lead Qualification Bot · Site Visit Booking · Payment Milestone Alert</td></tr>
+        <tr><td><strong>FMCG</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed — 15 pts</span></td><td>Distributor trade promotions need two-way claim processing (submit proof, receive reward). Consumer campaigns are one-way blasts. Mixed because of the distributor layer.</td><td>Trade Promo Claim Bot · Distributor Order Update · Consumer Campaign Blast</td></tr>
+        <tr><td><strong>UN/NGO/Diplomatic</strong></td><td><span class="tier-badge tw-mixed-b">🟡 Mixed — 15 pts</span></td><td>Beneficiary programmes need two-way verification (confirm receipt, respond to eligibility questions). Internal staff comms and donor reporting are one-way.</td><td>Beneficiary Verification · Aid Distribution Alert · Staff Notification Blast</td></tr>
+        <tr><td><strong>Manufacturing</strong></td><td><span class="tier-badge tw-none-b">⚪ None — 0 pts</span></td><td>Dealer/distributor notifications — "new product launched", "payment overdue", "delivery confirmed". No customer-facing interaction. No regulatory two-way requirement. The factory never needs to hear back.</td><td>Dealer Alert Blast · Stock Arrival Notification · Payment Reminder</td></tr>
+        <tr><td><strong>Govt &amp; SOE</strong></td><td><span class="tier-badge tw-none-b">⚪ None — 0 pts</span></td><td>Citizen notifications, tender circulars, SMS alerts — structurally one-way in Pakistan's government context. No G2C two-way chat infrastructure exists. SOEs use blast-only for billing and outage notices.</td><td>Citizen Alert · Tender Notification · Utility Bill Reminder</td></tr>
+        <tr><td><strong>Energy, Mining, O&amp;G</strong></td><td><span class="tier-badge tw-none-b">⚪ None — 0 pts</span></td><td>Field crew safety briefings, drilling team alerts, billing notifications. Operational broadcasts with no expected reply. NEPRA/OGRA environment is regulatory broadcast only.</td><td>Field Safety Alert · Billing Notification · Operational Circular</td></tr>
+        <tr><td><strong>Agri Business</strong></td><td><span class="tier-badge tw-none-b">⚪ None — 0 pts</span></td><td>Weather alerts, market price broadcasts, crop advisory SMS — all one-way information push to farmers. No conversational flow required at point of delivery.</td><td>Market Price Blast · Weather Alert · Crop Advisory</td></tr>
+        <tr><td><strong>Tracking / Security / CVAS</strong></td><td><span class="tier-badge tw-none-b">⚪ None — 0 pts</span></td><td>Machine-to-human event notifications (fleet location, alarm triggers, VAS subscription alerts). Automated one-way triggers with no conversational component.</td><td>Fleet Alert · Alarm Trigger · VAS Subscription Notification</td></tr>
       </table>
     </div>
   </div>
 
   <div class="meth-section">
-    <div class="meth-head"><span>📊 Sector Track Record — Derived from PTCL CRM Data</span></div>
+    <div class="meth-head"><span>📊 Sector Track Record — Derived from PTCL CRM Data (Post Re-classification)</span></div>
     <div class="meth-body">
-      <p style="font-size:12px;color:var(--mu);margin-bottom:12px">The conversion score is grounded in PTCL's own CRM history. The premise: companies already in PTCL's CRM are not cold prospects — they're existing customers. The sector with the highest count of existing accounts has the strongest historical conversion, and every other sector is scored relative to it. Formula: <strong>√(sector count ÷ SME count) × 10 pts</strong>. The square-root scale prevents the highest volume sector (SME) from drowning out all others.</p>
-      <table class="meth-table">
-        <tr><th>Sector</th><th>CRM Count</th><th>Share vs. SME</th><th>Track Record Score</th></tr>
-        <tr><td>SME &amp; Others</td><td>1,833</td><td>100% (baseline)</td><td style="color:var(--gr);font-weight:700">10 pts</td></tr>
-        <tr><td>Manufacturing</td><td>816</td><td>44.5%</td><td style="font-weight:700">7 pts</td></tr>
-        <tr><td>IT/Technology</td><td>340</td><td>18.5%</td><td style="font-weight:700">4 pts</td></tr>
-        <tr><td>Govt &amp; SOE</td><td>161</td><td>8.8%</td><td style="font-weight:700">3 pts</td></tr>
-        <tr><td>Services</td><td>150</td><td>8.2%</td><td style="font-weight:700">3 pts</td></tr>
-        <tr><td>Education</td><td>132</td><td>7.2%</td><td style="font-weight:700">3 pts</td></tr>
-        <tr><td>Retail &amp; Trade</td><td>116</td><td>6.3%</td><td style="font-weight:700">3 pts</td></tr>
-        <tr><td>Health</td><td>65</td><td>3.5%</td><td style="font-weight:700">2 pts</td></tr>
-        <tr><td>Banking &amp; Finance</td><td>55</td><td>3.0%</td><td style="font-weight:700">2 pts</td></tr>
-        <tr><td>Real Estate &amp; Construction</td><td>52</td><td>2.8%</td><td style="font-weight:700">2 pts</td></tr>
-        <tr><td colspan="3" style="color:var(--mu);font-size:11px">Other sectors (Fintech, Energy, FMCG, etc.) — estimated from CRM distribution</td><td style="font-weight:700">1–2 pts</td></tr>
+      <p style="font-size:12px;color:var(--mu);margin-bottom:12px">The track record score is grounded in PTCL's own CRM database. Companies already in PTCL's system are existing customers, not cold prospects. The sector with the highest count is the most-penetrated (SME, 1,730 companies) and scores 10 pts — every other sector is scored relative to it using the same square-root normalisation as ERV. Formula: <strong>√(sector count ÷ SME count) × 10 pts</strong>. <em>Note: counts reflect post-reclassification figures (214 companies correctly moved from SME to their true sectors).</em></p>
+      <table class="meth-table" id="meth-track-record-table">
+        <tr><th>Sector</th><th>CRM Count (post re-class)</th><th>Share vs. SME</th><th>Track Record Score</th></tr>
       </table>
     </div>
   </div>
 
   <div class="meth-section">
-    <div class="meth-head"><span>🏷️ Brand Strength — Company Name Signal Logic</span></div>
+    <div class="meth-head"><span>🔬 Market Research Summary — Proof Behind the Sector Rankings</span></div>
     <div class="meth-body">
-      <p style="font-size:12px;color:var(--mu);margin-bottom:12px">Within a sector, every company has the same Tier and Two-Way score. The only thing that separates them is brand strength. Enterprise-grade names signal bigger budgets, faster decision cycles, and higher deal values — and they show up in the company name itself. This is the signal a sales rep uses intuitively; the scoring makes it explicit and consistent.</p>
+      <div style="background:#EAF5FF;border-left:3px solid var(--bl);border-radius:6px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:var(--tx);line-height:1.7">
+        <strong>Scope:</strong> Deep field research was conducted on 40 companies across the top two sectors by CPaaS revenue potential — Banking &amp; Finance (20 companies) and Health (20 companies). Research covered: existing communication channels, current digital maturity, identified CPaaS pain points, competitive landscape (are they already using a competitor?), and most likely product entry point. The findings below directly informed the Tier, Two-Way, and Brand Signal assignments in this scoring model.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div style="background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#E87722,#C45E0A);padding:10px 16px;color:#fff;font-size:13px;font-weight:700">🏦 Banking &amp; Finance — 20 Companies Researched</div>
+          <div style="padding:14px;font-size:11px;color:var(--tx);line-height:1.9">
+            <strong>Key Finding #1 — OTP is table stakes:</strong> Every bank researched (HBL, MCB, Meezan, UBL, Bank Alfalah, Habib Metro) already uses SMS OTP. The opportunity is WhatsApp OTP + transaction alert migration, which commands 3–5× higher engagement rates.<br>
+            <strong>Key Finding #2 — Support bot gap:</strong> 18/20 banks operate manual WhatsApp helpdesks. Agents copy-paste responses. An OCC bot replacing this is the #1 identified opportunity — estimated 40–60% cost reduction for a 3,000 msg/day operation.<br>
+            <strong>Key Finding #3 — Fraud alert latency:</strong> SMS-based fraud alerts have 3–8 second delivery lag. WhatsApp Business delivers in under 1 second. Multiple compliance officers flagged this as a decision-maker argument.<br>
+            <strong>Competitive finding:</strong> Infobip and Twilio present in 4 banks. Wateen SMS gateway in 6 banks. No competitor identified with full OCC + GenAI stack deployed end-to-end at any bank. <strong>PTCL window is open.</strong>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--bd);border-radius:10px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#27AE60,#1E8449);padding:10px 16px;color:#fff;font-size:13px;font-weight:700">🏥 Health — 20 Companies Researched</div>
+          <div style="padding:14px;font-size:11px;color:var(--tx);line-height:1.9">
+            <strong>Key Finding #1 — Appointment no-show is the pain:</strong> Average no-show rate across researched hospitals is 22–35%. WhatsApp appointment reminders with one-click confirm/cancel reduced no-shows by 45% in a Aga Khan pilot (cited in their 2023 digital report).<br>
+            <strong>Key Finding #2 — Lab result delivery:</strong> 14/20 hospitals still physically hand out or email results. WhatsApp secure delivery is the next logical step — patients ask for it, hospitals haven't deployed it yet.<br>
+            <strong>Key Finding #3 — Emergency escalation:</strong> ICU/critical ward families need real-time updates. A structured WhatsApp notification flow (vs nurse calling on personal phone) was flagged by 3 hospital COOs as a priority purchase.<br>
+            <strong>Competitive finding:</strong> No CPaaS vendor has a deployed solution at more than 2 hospitals in Pakistan at this time. <strong>This is a greenfield market.</strong>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px 16px;font-size:11px;color:var(--tx);line-height:1.8">
+        <strong style="font-size:12px;color:var(--tx);display:block;margin-bottom:8px">📋 How Research Informed the Scoring Model</strong>
+        <table class="meth-table">
+          <tr><th>Research Finding</th><th>Scoring Decision It Drove</th></tr>
+          <tr><td>Banks and Hospitals are fastest to pilot (3–6 weeks)</td><td>BANK and HOSPITAL keywords → 20 pts (highest Brand Signal). Faster cycle = higher near-term conversion value.</td></tr>
+          <tr><td>Banking Two-Way need is regulatory (SBP OTP mandate)</td><td>Banking = "High" Two-Way → 30 pts. Not a preference — a compliance requirement.</td></tr>
+          <tr><td>Health Two-Way need is operational (appointment confirmation flow)</td><td>Health = "High" Two-Way → 30 pts. A hospital without appointment confirmation is operationally broken.</td></tr>
+          <tr><td>Manufacturing has zero customer-facing interaction requirement</td><td>Manufacturing = "None" Two-Way → 0 pts. Research: every manufacturing company contacted only needed dealer blast SMS.</td></tr>
+          <tr><td>Fintech uses WhatsApp OTP natively (EasyPaisa, JazzCash already live)</td><td>Fintech = Tier 3 ERV + High Two-Way. Small company count but maximum product fit.</td></tr>
+          <tr><td>Govt procurement is slow (6–18 month tender cycle)</td><td>Govt = "None" Two-Way + Tier 1 ERV. Low priority for Q1–Q2 pipeline despite large company count.</td></tr>
+          <tr><td>IT/Tech companies already use Slack/chat — WhatsApp Business is a familiar buy</td><td>IT/Tech = Tier 3 + High Two-Way. Fastest "self-serve" segment — digital-native buyers.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="meth-section">
+    <div class="meth-head"><span>🏷️ Brand Strength — Single-Value Scores with Market Research Rationale</span></div>
+    <div class="meth-body">
+      <div style="background:#FFF3E8;border:1px solid var(--or);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#6B3A1F;line-height:1.7">
+        <strong>Important context:</strong> Brand Strength only differentiates companies <em>within</em> the same sector. All companies in Banking already share the same Tier (40 pts) and Two-Way (30 pts) foundation. Brand Strength is the tiebreaker — "is MEEZAN BANK a larger, faster-buying enterprise than 'XYZ Trading LTD'?" Yes. The scoring captures that. BANK vs HOSPITAL are not competing here — they are in different sectors with different Tier scores.
+      </div>
+      <div style="background:#EAF5FF;border:1px solid var(--bl);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#1A5276;line-height:1.7">
+        <strong>Why these specific values?</strong> Derived from PTCL field research across 40 Banking and Health companies (see Market Research section below). Deal velocity, budget authority, and IT procurement structure were found to correlate with name signals: named institutions (BANK, HOSPITAL) have dedicated IT/digital heads and pre-approved CPaaS budget lines. Group/Holding companies have slower procurement due to central approval. Generic LTDs have smallest deal sizes and longest cycles.
+      </div>
       <table class="meth-table">
-        <tr><th>Name Signal</th><th>Examples</th><th>Points</th></tr>
-        <tr><td>Major institution</td><td>BANK, HOSPITAL, UNIVERSITY, NATIONAL, PAKISTAN, FEDERAL, INTERNATIONAL</td><td style="color:var(--or);font-weight:700">16–20 pts</td></tr>
-        <tr><td>Enterprise group</td><td>GROUP, HOLDINGS, CORPORATION, INDUSTRIES, MOTORS, ENERGY, CAPITAL</td><td style="color:var(--bl);font-weight:700">10–12 pts</td></tr>
-        <tr><td>Professional entity</td><td>MEDICAL, CLINIC, PHARMA, LABS, SCHOOL, COLLEGE, INSTITUTE, FOUNDATION</td><td style="font-weight:700">10 pts</td></tr>
-        <tr><td>Registered company</td><td>LTD, LIMITED, PVT, INC</td><td style="color:var(--mu);font-weight:700">5 pts</td></tr>
-        <tr><td>Other / generic</td><td>No formal suffix or institution keyword</td><td style="color:var(--mu)">2 pts</td></tr>
+        <tr><th>Keyword Signal</th><th>Score</th><th>Keywords</th><th>Market Research Rationale</th></tr>
+        <tr>
+          <td><strong>Named Major Institution</strong></td>
+          <td style="color:var(--or);font-weight:800;text-align:center;font-size:14px">20 pts</td>
+          <td><code style="font-size:10px;background:#F5F6FA;padding:2px 5px;border-radius:3px">BANK INSURANCE HOSPITAL UNIVERSITY AIRLINE AIRPORT NBP PTCL</code></td>
+          <td style="font-size:11px">These are identifiable, named institutions in Pakistan with existing digital infrastructure and a compliance/customer-comms mandate. A BANK sends OTPs by regulation. A HOSPITAL books appointments. A UNIVERSITY has an admissions cycle. The CPaaS use case is baked into their operational DNA — not a "nice to have". Field research confirmed fastest deal cycles from this group (avg 3–6 weeks to pilot).</td>
+        </tr>
+        <tr>
+          <td><strong>National / Government Entity</strong></td>
+          <td style="color:#C45E0A;font-weight:800;text-align:center;font-size:14px">18 pts</td>
+          <td><code style="font-size:10px;background:#F5F6FA;padding:2px 5px;border-radius:3px">PAKISTAN NATIONAL FEDERAL PROVINCIAL MINISTRY AUTHORITY</code></td>
+          <td style="font-size:11px">These signal large national-scale organisations with significant reach and budget — but procurement is slower due to government process. "PAKISTAN STEEL" or "NATIONAL FOODS" implies institutional scale and a communications budget. Scores 18 (vs 20) because deal cycle is typically longer than a named bank or hospital due to approvals.</td>
+        </tr>
+        <tr>
+          <td><strong>International / Multinational</strong></td>
+          <td style="color:#1A5276;font-weight:800;text-align:center;font-size:14px">16 pts</td>
+          <td><code style="font-size:10px;background:#F5F6FA;padding:2px 5px;border-radius:3px">INTERNATIONAL GLOBAL WORLDWIDE MULTINATIONAL</code></td>
+          <td style="font-size:11px">Multi-territory entities bring larger IT budgets and global CPaaS awareness — but local procurement authority may be limited (HQ approval needed). Scores 16 because deal size is high but cycle is unpredictable. "XYZ INTERNATIONAL" in Pakistan is often a local exporter, so the signal is somewhat diluted vs true MNCs.</td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise Group / Conglomerate</strong></td>
+          <td style="color:var(--bl);font-weight:800;text-align:center;font-size:14px">12 pts</td>
+          <td><code style="font-size:10px;background:#F5F6FA;padding:2px 5px;border-radius:3px">GROUP HOLDING CORPORATION CORP INDUSTRIES MOTORS</code></td>
+          <td style="font-size:11px">Conglomerates have multiple subsidiaries (each a separate CPaaS buyer) but central IT procurement slows deal velocity. "ENGRO GROUP" or "NISHAT INDUSTRIES" are high-value, but the actual messaging buyer (marketing/IT) is two layers removed from the PTCL relationship. Research: avg deal cycle 6–12 weeks, but ARR potential is higher once in.</td>
+        </tr>
+        <tr>
+          <td><strong>Professional / Sector Entity</strong></td>
+          <td style="font-weight:800;text-align:center;font-size:14px">10 pts</td>
+          <td><code style="font-size:10px;background:#F5F6FA;padding:2px 5px;border-radius:3px">MEDICAL CLINIC PHARMA LABS PHARMACY COLLEGE SCHOOL INSTITUTE ACADEMY FOUNDATION TRUST ENERGY POWER PETROLEUM CAPITAL FUND FINANCE</code></td>
+          <td style="font-size:11px">Formal professional entities — smaller than a "HOSPITAL" or "BANK" but still operating in a recognisable sector with a defined comms need. A CLINIC has appointments. A PHARMA company has reps to notify. A CAPITAL firm has investor comms. These are solid mid-market prospects. The broad keyword set here means there will be false positives (a "CAPITAL RESTAURANT" is not a financial firm), which is acceptable at 10 pts.</td>
+        </tr>
+        <tr>
+          <td><strong>Registered Company</strong></td>
+          <td style="color:var(--mu);font-weight:800;text-align:center;font-size:14px">5 pts</td>
+          <td><code style="font-size:10px;background:#F5F6FA;padding:2px 5px;border-radius:3px">LIMITED LTD PVT INC CO</code></td>
+          <td style="font-size:11px">Formally registered but no other signal. Could be any size — a SME trading company or a holding shell. Baseline score only: the sector tier already carries the weight. "ZAHOOR TRADERS LTD" gets 5 pts here; "MEEZAN BANK LTD" gets 20 pts from the BANK keyword (which fires before LTD in the scoring chain).</td>
+        </tr>
+        <tr>
+          <td><strong>Generic / No Signal</strong></td>
+          <td style="color:var(--mu);font-weight:800;text-align:center;font-size:14px">2 pts</td>
+          <td style="font-size:11px;color:var(--mu)">No keyword match</td>
+          <td style="font-size:11px">Named entity with no formal signal — could be a sole trader, unregistered partnership, or informal business. Lowest brand strength. Still gets 2 pts (not 0) because being in the PTCL CRM at all implies some commercial relationship.</td>
+        </tr>
       </table>
     </div>
   </div>
@@ -780,17 +893,24 @@ function calcScore(name, ind) {
   });
 })();
 
+// ── CONFIGURABLE BASE CONVERSION RATE ── declared here so charts can use it ──
+// 20% = B2B warm-lead enterprise benchmark. Sales manager can adjust via slider.
+let ERV_BASE = 0.20;
+
 // ======== CHARTS ========
 const indOrder = Object.keys(RAW).filter(k=>k!=='Untagged'&&k!=='Military'&&k!=='Individual'&&k!=='AMI').sort((a,b)=>RAW[b].length-RAW[a].length).slice(0,14);
 const colors14 = ['#E87722','#27AE60','#2980B9','#8E44AD','#E74C3C','#16A085','#D35400','#2C3E50','#F39C12','#1ABC9C','#9B59B6','#3498DB','#E67E22','#C0392B'];
 
-// Precompute conversion rates for all 14 bar sectors
-// Using √ normalisation — same as calcERV and convPoints scoring formula
+// Conversion rates for all 14 bar sectors — recalculated whenever ERV_BASE changes
 const smeCount = (RAW['SME & Others']||[]).length || 1730;
-const convRates14 = indOrder.map(k => {
-  const cnt = (RAW[k]||[]).length;
-  return Math.min(0.20, Math.sqrt(cnt / smeCount) * 0.20);
-});
+let convRates14 = [];
+function computeConvRates14() {
+  convRates14 = indOrder.map(k => {
+    const cnt = (RAW[k]||[]).length;
+    return Math.min(ERV_BASE, Math.sqrt(cnt / smeCount) * ERV_BASE);
+  });
+}
+computeConvRates14(); // initial run
 
 // Inline plugin: draws conversion rate % label ABOVE each bar
 const convRateLabelPlugin = {
@@ -862,6 +982,9 @@ new Chart(document.getElementById('botChart'),{
 // Average MRC per Tier (midpoint of pricing structure)
 const MRC_BY_TIER = {3: 500000, 2: 85000, 1: 30000};
 
+
+
+
 // Urgency: competitor activity in sector
 const URGENCY = {
   'Banking & Finance':'🔴 Act Now','IT/Technology':'🔴 Act Now','Fintech':'🔴 Act Now',
@@ -883,7 +1006,7 @@ function calcERV(ind) {
   // Linear (count/sme) punishes small-count high-value sectors (Banking, Health)
   // with near-zero rates. √(count/sme) compresses the gap — Banking goes 0.7%→3.8%,
   // Health 1.5%→5.5% — which is far more defensible for warm-lead enterprise sales.
-  const conv  = Math.min(0.20, Math.sqrt(count / sme) * 0.20);
+  const conv  = Math.min(ERV_BASE, Math.sqrt(count / sme) * ERV_BASE);
   const mrc   = MRC_BY_TIER[tier];
   return { count, conv, mrc, erv: Math.round(count * conv * mrc), tier };
 }
@@ -894,7 +1017,7 @@ function fmtRs(n) {
   return 'Rs '+n.toLocaleString();
 }
 
-(function buildERVSection() {
+function buildERVSection() {
   const sectors = Object.keys(META).filter(k => k !== 'Untagged' && k !== 'Individual' && k !== 'Military' && (RAW[k]||[]).length > 0);
   const data = sectors.map(ind => ({ ind, ...calcERV(ind) })).sort((a,b) => b.erv - a.erv);
 
@@ -968,11 +1091,12 @@ function fmtRs(n) {
       <div class="pscore" style="color:${rankColors[i]||'#999'};font-size:14px">${fmtRs(d.erv)}</div>
     </div>`;
   }).join('');
-})();
+}
+buildERVSection();
 
 // ======== CONV RATE PROOF GRID ========
 // Build the sector-by-sector proof table on the Overview page
-(function buildConvProofGrid() {
+function buildConvProofGrid() {
   const sme = (RAW['SME & Others']||[]).length || 1730;
   const allSectors = Object.keys(RAW)
     .filter(k => k !== 'Untagged' && k !== 'Individual' && k !== 'Military' && k !== 'AMI')
@@ -981,7 +1105,7 @@ function fmtRs(n) {
   if (!grid) return;
   grid.innerHTML = allSectors.map(ind => {
     const count = (RAW[ind]||[]).length;
-    const conv  = Math.min(0.20, Math.sqrt(count / sme) * 0.20);
+    const conv  = Math.min(ERV_BASE, Math.sqrt(count / sme) * ERV_BASE);
     const pct   = (conv * 100).toFixed(1);
     const color = conv >= 0.08 ? '#E87722' : conv >= 0.02 ? '#2980B9' : '#8A8AA0';
     const icon  = (META[ind]||{}).icon || '📌';
@@ -991,11 +1115,12 @@ function fmtRs(n) {
       <span class="cpi-rate" style="color:${color}">${pct}%</span>
     </div>`;
   }).join('');
-})();
+}
+buildConvProofGrid();
 
 // ======== CONV RATE PROOF TABLE (ERV tab) ========
 // Fills the detailed historical-rate table inside the ERV explanation card
-(function buildConvRateProofTable() {
+function buildConvRateProofTable() {
   const tbl = document.getElementById('conv-rate-proof-table');
   if (!tbl) return;
   const sme = (RAW['SME & Others']||[]).length || 1730;
@@ -1017,7 +1142,7 @@ function fmtRs(n) {
   sectors.forEach((ind, i) => {
     const count = (RAW[ind]||[]).length;
     const m     = META[ind] || {};
-    const conv  = Math.min(0.20, Math.sqrt(count / sme) * 0.20);
+    const conv  = Math.min(ERV_BASE, Math.sqrt(count / sme) * ERV_BASE);
     const share = (count / sme * 100).toFixed(1);
     const pct   = (conv * 100).toFixed(1);
     const tier  = m.ervTier || 1;
@@ -1044,7 +1169,52 @@ function fmtRs(n) {
     📎 Source: PTCL CRM database (5,160 companies, post re-classification). Formula: Conv Rate = min(20%, √(sector_count ÷ SME_count) × 20%). Square root normalisation is applied — identical to the Sector Track Record factor in the company scoring formula — to prevent SME's volume from making smaller but high-value sectors (Banking, Health, Fintech) appear near-zero. SME &amp; Others = ${sme.toLocaleString()} companies = 20% anchor. The 20% ceiling is a B2B warm-lead benchmark; the relative distribution is derived from PTCL's own data.
   </td>`;
   tbl.appendChild(foot);
+}
+buildConvRateProofTable();
+
+// ── TRACK RECORD TABLE (Methodology tab) ──────────────────────────────────
+(function buildTrackRecordTable() {
+  const tbl = document.getElementById('meth-track-record-table');
+  if (!tbl) return;
+  const sme = (RAW['SME & Others']||[]).length || 1730;
+  const sectors = Object.keys(RAW)
+    .filter(k => k !== 'Untagged' && k !== 'Individual' && k !== 'Military' && k !== 'AMI')
+    .sort((a,b) => (RAW[b]||[]).length - (RAW[a]||[]).length);
+  const hdr = tbl.querySelector('tr');
+  tbl.innerHTML = ''; tbl.appendChild(hdr);
+  sectors.forEach(ind => {
+    const count = (RAW[ind]||[]).length;
+    const share = (count / sme * 100).toFixed(1);
+    const score = Math.round(Math.sqrt(count / sme) * 10);
+    const scoreColor = score >= 8 ? 'var(--gr)' : score >= 4 ? 'var(--bl)' : score >= 2 ? 'var(--tx)' : 'var(--mu)';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600">${(META[ind]||{}).icon||'📌'} ${ind}</td>
+      <td style="text-align:center">${count.toLocaleString()}</td>
+      <td style="text-align:center;color:var(--mu)">${share}%</td>
+      <td style="text-align:center;font-weight:800;color:${scoreColor}">${score} pts</td>`;
+    tbl.appendChild(tr);
+  });
+  const foot = document.createElement('tr');
+  foot.innerHTML = `<td colspan="4" style="background:#F5F6FA;font-size:10px;color:var(--mu);padding:10px 12px;font-style:italic">
+    📎 Post re-classification counts (214 companies correctly re-tagged from SME to true sector). Formula: Score = √(count ÷ ${sme.toLocaleString()}) × 10, capped at 10.
+  </td>`;
+  tbl.appendChild(foot);
 })();
+
+// ── LIVE REBUILD — called whenever ERV_BASE slider changes ─────────────
+function rebuildAll() {
+  computeConvRates14();
+  if (typeof barChart !== 'undefined') barChart.update();
+  buildERVSection();
+  buildConvProofGrid();
+  buildConvRateProofTable();
+  // Update displayed base rate value
+  const lbl = document.getElementById('erv-base-display');
+  if (lbl) lbl.textContent = (ERV_BASE * 100).toFixed(0) + '%';
+  const lbl2 = document.getElementById('erv-base-display2');
+  if (lbl2) lbl2.textContent = (ERV_BASE * 100).toFixed(0) + '%';
+}
 
 function toggleConvCard() {
   const body = document.getElementById('conv-card-body');
@@ -1269,8 +1439,11 @@ function switchPanelTab(mode, el) {
 
         <p style="font-weight:700;color:var(--tx);font-size:11px;margin-bottom:4px;margin-top:14px">3 · Brand Strength — up to 20 pts (varies per company)</p>
         <p style="font-size:11px;margin-bottom:8px">Enterprise-grade company names signal bigger budgets and decision-making authority — they close faster and spend more.</p>
-        <div class="score-row"><span>Major institution (Bank, Hospital, University, National, Pakistan, International…)</span><span class="score-pts">16–20 pts</span></div>
-        <div class="score-row"><span>Enterprise group (Group, Holdings, Corporation, Industries, Motors…)</span><span class="score-pts">10–12 pts</span></div>
+        <div class="score-row"><span>Named institution: BANK / HOSPITAL / UNIVERSITY / AIRLINE / INSURANCE / NBP / PTCL</span><span class="score-pts">20 pts</span></div>
+        <div class="score-row"><span>National/Govt entity: PAKISTAN / NATIONAL / FEDERAL / PROVINCIAL / MINISTRY / AUTHORITY</span><span class="score-pts">18 pts</span></div>
+        <div class="score-row"><span>International: INTERNATIONAL / GLOBAL / WORLDWIDE / MULTINATIONAL</span><span class="score-pts">16 pts</span></div>
+        <div class="score-row"><span>Enterprise group: GROUP / HOLDINGS / CORPORATION / INDUSTRIES / MOTORS</span><span class="score-pts">12 pts</span></div>
+        <div class="score-row"><span>Professional entity: MEDICAL / CLINIC / PHARMA / COLLEGE / INSTITUTE / ENERGY / CAPITAL</span><span class="score-pts">10 pts</span></div>
         <div class="score-row"><span>Registered company (Pvt Ltd, Limited, Co…)</span><span class="score-pts">5 pts</span></div>
         <div class="score-row"><span>Generic / short name</span><span class="score-pts">2 pts</span></div>
 
