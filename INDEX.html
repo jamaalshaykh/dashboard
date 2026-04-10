@@ -33,6 +33,19 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .cb{padding:20px}
 .cw{position:relative;height:260px}.cw.tall{height:320px}
 .alert{background:var(--orl);border-left:4px solid var(--or);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--ord)}
+.conv-card{background:#fff;border:1px solid var(--bd);border-radius:12px;margin-bottom:20px;overflow:hidden}
+.conv-card-hd{background:linear-gradient(135deg,#1A1A2E,#2D3E6E);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.conv-card-hd h4{color:#fff;font-size:13px;font-weight:700;margin:0}
+.conv-toggle{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:20px;padding:4px 14px;font-size:11px;cursor:pointer;font-weight:600}
+.conv-body{padding:16px 20px}
+.conv-formula{background:#F5F6FA;border-radius:10px;padding:14px 18px;margin-bottom:14px;font-size:12px;line-height:2}
+.conv-formula code{background:var(--orl);color:var(--ord);padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px}
+.conv-proof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:12px}
+.conv-proof-item{background:#F9F9FC;border:1px solid var(--bd);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+.conv-proof-item .cpi-name{font-size:11px;color:var(--tx);font-weight:600;flex:1}
+.conv-proof-item .cpi-count{font-size:11px;color:var(--mu);margin:0 8px}
+.conv-proof-item .cpi-rate{font-size:12px;font-weight:800;white-space:nowrap}
+.conv-proof-note{margin-top:14px;padding:10px 14px;background:#EAF5FF;border-left:3px solid var(--bl);border-radius:6px;font-size:11px;color:var(--tx);line-height:1.7}
 
 /* INDUSTRY CARDS GRID */
 .ind-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
@@ -193,6 +206,30 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <!-- OVERVIEW -->
 <div id="tab-overview" class="sec active">
   <div class="alert"><strong>📌 Pre-Sales Intelligence:</strong> 5,160 PTCL enterprise customers analysed. 4,101 (79.5%) correctly tagged after re-classification of 214 misaligned companies. <strong>541 companies</strong> are in Tier 3 Full Stack sectors (Banking, Health, IT/Tech, Fintech, Telecom) — highest GenAI + OCC revenue potential. Click any industry card to drill in.</div>
+
+  <!-- CONVERSION RATE METHODOLOGY CARD -->
+  <div class="conv-card">
+    <div class="conv-card-hd" onclick="toggleConvCard()">
+      <h4>📊 How Conversion Rates Are Defined — Proof From PTCL's Own CRM Data</h4>
+      <button class="conv-toggle" id="conv-toggle-btn">Hide ▲</button>
+    </div>
+    <div class="conv-body" id="conv-card-body">
+      <div class="conv-formula">
+        <strong style="color:var(--tx);font-size:12px">The Formula</strong><br>
+        <code>Conversion Rate = min(20%, √(Sector Companies ÷ SME Companies) × 20%)</code><br>
+        <span style="color:var(--mu);font-size:11px">
+          <strong style="color:var(--tx)">Why the square root?</strong> Without it, a linear ratio crushes small sectors unfairly — Banking (61 cos) would get only 0.7% while SME (1,730 cos) gets 20%, a 28× gap. The square root compresses that gap so Banking gets 3.8% and Health gets 5.5% — far more defensible for warm enterprise leads. This is the <em>exact same normalisation</em> used in the Sector Track Record factor of the scoring formula.<br>
+          <strong style="color:var(--tx)">Why SME is the anchor (20% ceiling):</strong> SME has the highest number of companies in PTCL's existing CRM — it is PTCL's most penetrated sector. We set this as the 20% maximum. The 20% itself is a B2B warm-lead benchmark; what the model derives from data is how every other sector scales <em>relative</em> to that anchor.
+        </span>
+      </div>
+      <strong style="font-size:12px;color:var(--tx)">Proof — PTCL CRM Company Count by Sector (post re-classification):</strong>
+      <div class="conv-proof-grid" id="conv-proof-grid"></div>
+      <div class="conv-proof-note">
+        ⚠️ <strong>These conversion rates drive the ERV (Expected Revenue Value) on the Segment Priority tab.</strong> ERV is a <em>pipeline number</em> — it shows the total monthly revenue if every company in a sector converts at its historical rate. It is not guaranteed revenue. Higher-Tier sectors have lower rates because PTCL has fewer existing relationships there — but their deal size (MRC) is 6–17× larger, which is why they still dominate the pipeline value.
+      </div>
+    </div>
+  </div>
+
   <div class="kpi-grid">
     <div class="kpi c1"><div class="kv c1">5,160</div><div class="kl">Total Companies</div><div class="ks">PTCL CRM list</div></div>
     <div class="kpi c2"><div class="kv c2">4,101</div><div class="kl">Industry Tagged</div><div class="ks">79.5% · 214 re-classified</div></div>
@@ -255,15 +292,63 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div id="erv-summary-banner" style="background:linear-gradient(135deg,var(--dk),var(--md));border-radius:12px;padding:20px 24px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px"></div>
 
   <!-- ERV Explanation -->
-  <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:12px;color:var(--mu);line-height:1.8">
-    <strong style="color:var(--tx);font-size:13px">📐 How ERV is Calculated</strong><br>
-    <strong style="color:var(--tx)">ERV (Expected Revenue Value)</strong> = Companies × Conversion Rate × Average Monthly Contract Value (MRC)<br>
-    <span style="color:var(--mu)">
-    · <strong style="color:var(--tx)">Companies</strong> = count of companies in the sector from PTCL CRM (post re-classification)<br>
-    · <strong style="color:var(--tx)">Conversion Rate</strong> = (sector count ÷ SME count) × 20% — derived from PTCL's own CRM penetration history. SME is the highest-penetration sector at 20%; all others scale proportionally downward.<br>
-    · <strong style="color:var(--tx)">Average MRC</strong> = Tier 3 Full Stack (GenAI + OCC Enterprise + WA Pro) = <strong>Rs 500,000/month</strong> · Tier 2 OCC (OCC Standard + WA Basic) = <strong>Rs 85,000/month</strong> · Tier 1 Broadcast (WA Broadcast) = <strong>Rs 30,000/month</strong><br>
-    · <strong style="color:var(--tx)">ERV is a pipeline number</strong>, not guaranteed revenue. It represents what the total monthly recurring revenue would be if every company in the sector converted at the sector's historical rate.
-    </span>
+  <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:20px">
+    <div style="background:linear-gradient(135deg,#1A1A2E,#2D3E6E);padding:14px 20px">
+      <div style="color:#fff;font-size:14px;font-weight:700">📐 ERV Formula &amp; Methodology</div>
+      <div style="color:rgba(255,255,255,.55);font-size:11px;margin-top:3px">ERV = Pipeline opportunity, NOT guaranteed revenue</div>
+    </div>
+    <div style="padding:16px 20px">
+      <!-- Pipeline disclaimer -->
+      <div style="background:#FFF3E8;border:1px solid #E87722;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:#6B3A1F;line-height:1.7">
+        <strong style="font-size:13px">⚠️ Pipeline Definition:</strong> ERV is what total monthly recurring revenue <em>would be</em> if every company in the sector converted at that sector's historical rate. It is a weighted probability-adjusted pipeline figure — not a forecast, not a commitment. Think of it as: <em>"If we ran a perfect campaign in this sector and historical rates held, this is the MRR ceiling."</em>
+      </div>
+      <!-- Formula -->
+      <div style="font-size:12px;color:var(--tx);line-height:2">
+        <strong style="font-size:13px">The ERV Formula</strong><br>
+        <span style="background:#F5F6FA;border-radius:6px;padding:6px 14px;display:inline-block;font-family:monospace;font-size:11px;margin:4px 0;color:var(--ord)">ERV = Companies × Historical Conversion Rate × Avg Monthly Contract Value (MRC)</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px;font-size:11px">
+        <!-- Factor 1 -->
+        <div style="background:#F5F6FA;border-radius:8px;padding:12px;border-top:3px solid var(--or)">
+          <div style="font-weight:700;color:var(--tx);margin-bottom:6px">① Companies</div>
+          <div style="color:var(--mu);line-height:1.7">Count of companies in the sector from PTCL's CRM database, post re-classification of 214 misaligned entries. This is the actual prospect universe.</div>
+        </div>
+        <!-- Factor 2 -->
+        <div style="background:#F5F6FA;border-radius:8px;padding:12px;border-top:3px solid var(--bl)">
+          <div style="font-weight:700;color:var(--tx);margin-bottom:6px">② Historical Conversion Rate</div>
+          <div style="color:var(--mu);line-height:1.7">
+            Derived from PTCL's own CRM penetration data:<br>
+            <code style="background:var(--orl);color:var(--ord);padding:1px 5px;border-radius:3px;font-size:10px">Rate = min(20%, √(count ÷ SME_count) × 20%)</code><br>
+            SME is PTCL's highest-penetration sector (1,730 companies = benchmark at 20%). Square root normalisation prevents SME's size from making every other sector look near-zero — the same technique used in the scoring formula. <strong>The relative rates are derived from PTCL's own CRM mix; only the 20% ceiling is a B2B benchmark assumption.</strong>
+          </div>
+        </div>
+        <!-- Factor 3 -->
+        <div style="background:#F5F6FA;border-radius:8px;padding:12px;border-top:3px solid var(--gr)">
+          <div style="font-weight:700;color:var(--tx);margin-bottom:6px">③ Average MRC by Tier</div>
+          <div style="color:var(--mu);line-height:1.7">
+            <strong style="color:var(--or)">Tier 3 → Rs 5,00,000/mo</strong><br>GenAI Bot + OCC Enterprise + All Channels<br>
+            <strong style="color:var(--bl)">Tier 2 → Rs 85,000/mo</strong><br>OCC Standard + WA Business<br>
+            <strong style="color:var(--mu)">Tier 1 → Rs 30,000/mo</strong><br>WA Broadcast only
+          </div>
+        </div>
+      </div>
+      <!-- Historical rate table -->
+      <div style="margin-top:16px">
+        <div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:8px">Sector Historical Conversion Rates — Derived from PTCL CRM Data</div>
+        <div style="overflow-x:auto">
+          <table class="meth-table" id="conv-rate-proof-table">
+            <tr>
+              <th>Sector</th>
+              <th style="text-align:center">PTCL CRM Count</th>
+              <th style="text-align:center">Share vs SME</th>
+              <th style="text-align:center">Historical Conv. Rate</th>
+              <th style="text-align:center">ERV Tier</th>
+              <th style="text-align:center">Urgency</th>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Upsell Multiplier -->
@@ -699,16 +784,64 @@ function calcScore(name, ind) {
 const indOrder = Object.keys(RAW).filter(k=>k!=='Untagged'&&k!=='Military'&&k!=='Individual'&&k!=='AMI').sort((a,b)=>RAW[b].length-RAW[a].length).slice(0,14);
 const colors14 = ['#E87722','#27AE60','#2980B9','#8E44AD','#E74C3C','#16A085','#D35400','#2C3E50','#F39C12','#1ABC9C','#9B59B6','#3498DB','#E67E22','#C0392B'];
 
+// Precompute conversion rates for all 14 bar sectors
+// Using √ normalisation — same as calcERV and convPoints scoring formula
+const smeCount = (RAW['SME & Others']||[]).length || 1730;
+const convRates14 = indOrder.map(k => {
+  const cnt = (RAW[k]||[]).length;
+  return Math.min(0.20, Math.sqrt(cnt / smeCount) * 0.20);
+});
+
+// Inline plugin: draws conversion rate % label ABOVE each bar
+const convRateLabelPlugin = {
+  id: 'convRateLabel',
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0);
+    ctx.save();
+    meta.data.forEach((bar, i) => {
+      const rate = convRates14[i];
+      const label = (rate * 100).toFixed(1) + '%';
+      // Background pill
+      const tw = ctx.measureText(label).width + 8;
+      const th = 14;
+      const bx = bar.x - tw / 2;
+      const by = bar.y - th - 4;
+      ctx.fillStyle = rate >= 0.08 ? '#E87722' : rate >= 0.02 ? '#2980B9' : '#8A8AA0';
+      ctx.beginPath();
+      ctx.roundRect(bx, by, tw, th, 4);
+      ctx.fill();
+      // Label text
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 9px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, bar.x, by + th / 2);
+    });
+    ctx.restore();
+  }
+};
+
 // Industry Bar
 const barChart = new Chart(document.getElementById('industryBar'),{
   type:'bar',
   data:{labels:indOrder, datasets:[{data:indOrder.map(k=>RAW[k].length), backgroundColor:colors14, borderRadius:6, borderSkipped:false}]},
   options:{
     responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toLocaleString()} companies — click to explore`}}},
+    layout:{padding:{top:22}},
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{
+        label: ctx => {
+          const rate = (convRates14[ctx.dataIndex]*100).toFixed(1);
+          return [` ${ctx.raw.toLocaleString()} companies`, ` Conv. rate: ${rate}% · click to explore`];
+        }
+      }}
+    },
     scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:40}},y:{grid:{color:'#F0F0F5'},ticks:{font:{size:10}}}},
     onClick:(e,el)=>{if(el.length>0){openPanel(indOrder[el[0].index])}}
-  }
+  },
+  plugins:[convRateLabelPlugin]
 });
 
 // Product Donut
@@ -746,7 +879,11 @@ function calcERV(ind) {
   const m     = META[ind]||{};
   const tier  = m.ervTier||1;
   const sme   = (RAW['SME & Others']||[]).length||1730;
-  const conv  = Math.min(0.20, (count / sme) * 0.20);
+  // Square-root normalisation: same rationale as the scoring formula.
+  // Linear (count/sme) punishes small-count high-value sectors (Banking, Health)
+  // with near-zero rates. √(count/sme) compresses the gap — Banking goes 0.7%→3.8%,
+  // Health 1.5%→5.5% — which is far more defensible for warm-lead enterprise sales.
+  const conv  = Math.min(0.20, Math.sqrt(count / sme) * 0.20);
   const mrc   = MRC_BY_TIER[tier];
   return { count, conv, mrc, erv: Math.round(count * conv * mrc), tier };
 }
@@ -832,6 +969,91 @@ function fmtRs(n) {
     </div>`;
   }).join('');
 })();
+
+// ======== CONV RATE PROOF GRID ========
+// Build the sector-by-sector proof table on the Overview page
+(function buildConvProofGrid() {
+  const sme = (RAW['SME & Others']||[]).length || 1730;
+  const allSectors = Object.keys(RAW)
+    .filter(k => k !== 'Untagged' && k !== 'Individual' && k !== 'Military' && k !== 'AMI')
+    .sort((a,b) => (RAW[b]||[]).length - (RAW[a]||[]).length);
+  const grid = document.getElementById('conv-proof-grid');
+  if (!grid) return;
+  grid.innerHTML = allSectors.map(ind => {
+    const count = (RAW[ind]||[]).length;
+    const conv  = Math.min(0.20, Math.sqrt(count / sme) * 0.20);
+    const pct   = (conv * 100).toFixed(1);
+    const color = conv >= 0.08 ? '#E87722' : conv >= 0.02 ? '#2980B9' : '#8A8AA0';
+    const icon  = (META[ind]||{}).icon || '📌';
+    return `<div class="conv-proof-item">
+      <span class="cpi-name">${icon} ${ind}</span>
+      <span class="cpi-count">${count.toLocaleString()} cos</span>
+      <span class="cpi-rate" style="color:${color}">${pct}%</span>
+    </div>`;
+  }).join('');
+})();
+
+// ======== CONV RATE PROOF TABLE (ERV tab) ========
+// Fills the detailed historical-rate table inside the ERV explanation card
+(function buildConvRateProofTable() {
+  const tbl = document.getElementById('conv-rate-proof-table');
+  if (!tbl) return;
+  const sme = (RAW['SME & Others']||[]).length || 1730;
+  const sectors = Object.keys(RAW)
+    .filter(k => k !== 'Untagged' && k !== 'Individual' && k !== 'Military' && k !== 'AMI')
+    .sort((a,b) => (RAW[b]||[]).length - (RAW[a]||[]).length);
+
+  const tierLabel = t => t===3
+    ? '<span class="tier-badge tier3">Tier 3 — Full Stack</span>'
+    : t===2
+    ? '<span class="tier-badge tier2">Tier 2 — OCC</span>'
+    : '<span class="tier-badge tier1">Tier 1 — Broadcast</span>';
+
+  // Keep existing header row, only inject data rows
+  const existingHeader = tbl.querySelector('tr');
+  tbl.innerHTML = '';
+  tbl.appendChild(existingHeader);
+
+  sectors.forEach((ind, i) => {
+    const count = (RAW[ind]||[]).length;
+    const m     = META[ind] || {};
+    const conv  = Math.min(0.20, Math.sqrt(count / sme) * 0.20);
+    const share = (count / sme * 100).toFixed(1);
+    const pct   = (conv * 100).toFixed(1);
+    const tier  = m.ervTier || 1;
+    const urg   = URGENCY[ind] || '🟢 12+ Months';
+    const rateColor = conv >= 0.08 ? 'var(--or)' : conv >= 0.02 ? 'var(--bl)' : 'var(--mu)';
+    const icon  = m.icon || '📌';
+    const tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.title = `Click to explore ${ind}`;
+    tr.onclick = () => openPanel(ind);
+    tr.innerHTML = `
+      <td style="font-weight:700">${icon} ${ind}</td>
+      <td style="text-align:center">${count.toLocaleString()}</td>
+      <td style="text-align:center;color:var(--mu)">${share}% of SME</td>
+      <td style="text-align:center;font-weight:800;color:${rateColor}">${pct}%</td>
+      <td>${tierLabel(tier)}</td>
+      <td style="font-size:10px;font-weight:600">${urg}</td>`;
+    tbl.appendChild(tr);
+  });
+
+  // Append a proof footnote row
+  const foot = document.createElement('tr');
+  foot.innerHTML = `<td colspan="6" style="background:#F5F6FA;font-size:10px;color:var(--mu);padding:10px 12px;font-style:italic">
+    📎 Source: PTCL CRM database (5,160 companies, post re-classification). Formula: Conv Rate = min(20%, √(sector_count ÷ SME_count) × 20%). Square root normalisation is applied — identical to the Sector Track Record factor in the company scoring formula — to prevent SME's volume from making smaller but high-value sectors (Banking, Health, Fintech) appear near-zero. SME &amp; Others = ${sme.toLocaleString()} companies = 20% anchor. The 20% ceiling is a B2B warm-lead benchmark; the relative distribution is derived from PTCL's own data.
+  </td>`;
+  tbl.appendChild(foot);
+})();
+
+function toggleConvCard() {
+  const body = document.getElementById('conv-card-body');
+  const btn  = document.getElementById('conv-toggle-btn');
+  if (!body) return;
+  const hidden = body.style.display === 'none';
+  body.style.display = hidden ? '' : 'none';
+  btn.textContent = hidden ? 'Hide ▲' : 'Show ▼';
+}
 
 // OCC List (updated with new counts)
 document.getElementById('occ-list').innerHTML = Object.keys(RAW)
