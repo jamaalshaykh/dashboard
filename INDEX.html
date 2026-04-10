@@ -183,8 +183,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="tab active" onclick="showTab('overview',this)">📊 Overview</div>
   <div class="tab" onclick="showTab('industries',this)">🏭 Industries</div>
   <div class="tab" onclick="showTab('top20',this)">🏆 Top 20 Picks</div>
-  <div class="tab" onclick="showTab('products',this)">📦 Products</div>
-  <div class="tab" onclick="showTab('priority',this)">🎯 Priority</div>
+  <div class="tab" onclick="showTab('priority',this)">🎯 Segment Priority</div>
   <div class="tab" onclick="showTab('research',this)">🔍 Field Research</div>
   <div class="tab" onclick="showTab('methodology',this)">📋 Methodology</div>
 </div>
@@ -209,7 +208,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="prog-wrap"><div class="prog-label"><span>WhatsApp Broadcast</span><span>4,033</span></div><div class="prog-bar"><div class="prog-fill" style="width:78%;background:var(--gr)"></div></div></div>
         <div class="prog-wrap"><div class="prog-label"><span>SMS</span><span>3,981</span></div><div class="prog-bar"><div class="prog-fill" style="width:77%;background:var(--bl)"></div></div></div>
         <div class="prog-wrap"><div class="prog-label"><span>Email</span><span>310</span></div><div class="prog-bar"><div class="prog-fill" style="width:6%;background:var(--pu)"></div></div></div>
-        <div class="prog-wrap"><div class="prog-label"><span>GenAI Bot</span><span>61</span></div><div class="prog-bar"><div class="prog-fill" style="width:1.2%;background:var(--or)"></div></div></div>
+        <div class="prog-wrap"><div class="prog-label"><span>GenAI Bot</span><span>541</span></div><div class="prog-bar"><div class="prog-fill" style="width:10.5%;background:var(--or)"></div></div></div>
       </div>
     </div></div>
   </div>
@@ -249,26 +248,76 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="t20-grid" id="t20-grid"></div>
 </div>
 
-<!-- PRODUCTS -->
-<div id="tab-products" class="sec">
-  <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
-    <div class="kpi c2"><div class="kv c2">4,033</div><div class="kl">WhatsApp Broadcast</div><div class="ks">78% of total list</div></div>
-    <div class="kpi c3"><div class="kv c3">3,981</div><div class="kl">SMS Prospects</div><div class="ks">77% of total list</div></div>
-    <div class="kpi c4"><div class="kv c4">310</div><div class="kl">Email Prospects</div><div class="ks">Edu, Health, Banking, Real Estate</div></div>
-  </div>
-  <div class="g2b">
-    <div class="card"><div class="ch"><h3>WhatsApp + SMS by Industry</h3><span class="badge">Cross-sell view</span></div><div class="cb"><div class="cw tall"><canvas id="wasmsPolar"></canvas></div></div></div>
-    <div class="card"><div class="ch"><h3>Email-Enabled Industries</h3><span class="badge">Best upsell</span></div><div class="cb" id="email-list"></div></div>
-  </div>
-</div>
-
-<!-- PRIORITY -->
+<!-- SEGMENT PRIORITY + ERV -->
 <div id="tab-priority" class="sec">
-  <div class="alert"><strong>🎯 Priority Logic:</strong> Banking scores highest (96/100) despite small count — every company needs GenAI + OCC + 3 channels + high deal value. SME has volume. Education and Health have multi-product fit.</div>
-  <div class="g2b">
-    <div class="card"><div class="ch"><h3>Segment Priority Radar</h3><span class="badge">6 dimensions</span></div><div class="cb"><div class="cw tall"><canvas id="priorityRadar"></canvas></div></div></div>
-    <div class="card"><div class="ch"><h3>Priority Rankings</h3><span class="badge">Click to explore</span></div><div class="cb" id="priority-list"></div></div>
+
+  <!-- Pipeline Summary Banner -->
+  <div id="erv-summary-banner" style="background:linear-gradient(135deg,var(--dk),var(--md));border-radius:12px;padding:20px 24px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px"></div>
+
+  <!-- ERV Explanation -->
+  <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:12px;color:var(--mu);line-height:1.8">
+    <strong style="color:var(--tx);font-size:13px">📐 How ERV is Calculated</strong><br>
+    <strong style="color:var(--tx)">ERV (Expected Revenue Value)</strong> = Companies × Conversion Rate × Average Monthly Contract Value (MRC)<br>
+    <span style="color:var(--mu)">
+    · <strong style="color:var(--tx)">Companies</strong> = count of companies in the sector from PTCL CRM (post re-classification)<br>
+    · <strong style="color:var(--tx)">Conversion Rate</strong> = (sector count ÷ SME count) × 20% — derived from PTCL's own CRM penetration history. SME is the highest-penetration sector at 20%; all others scale proportionally downward.<br>
+    · <strong style="color:var(--tx)">Average MRC</strong> = Tier 3 Full Stack (GenAI + OCC Enterprise + WA Pro) = <strong>Rs 500,000/month</strong> · Tier 2 OCC (OCC Standard + WA Basic) = <strong>Rs 85,000/month</strong> · Tier 1 Broadcast (WA Broadcast) = <strong>Rs 30,000/month</strong><br>
+    · <strong style="color:var(--tx)">ERV is a pipeline number</strong>, not guaranteed revenue. It represents what the total monthly recurring revenue would be if every company in the sector converted at the sector's historical rate.
+    </span>
   </div>
+
+  <!-- Upsell Multiplier -->
+  <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+    <div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px">🪜 The Upsell Ladder — Why Early Acquisition Matters</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div style="background:#F5F6FA;border-radius:10px;padding:14px;border-top:3px solid var(--mu);text-align:center">
+        <div style="font-size:10px;font-weight:700;color:var(--mu);margin-bottom:6px">ENTRY — TIER 1</div>
+        <div style="font-size:22px;font-weight:800;color:var(--mu)">Rs 30K</div>
+        <div style="font-size:10px;color:var(--mu);margin-top:4px">/month · WA Broadcast only</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--tx)">Customer is in the ecosystem. You own the relationship.</div>
+      </div>
+      <div style="background:#EBF5FB;border-radius:10px;padding:14px;border-top:3px solid var(--bl);text-align:center">
+        <div style="font-size:10px;font-weight:700;color:var(--bl);margin-bottom:6px">GROW — TIER 2</div>
+        <div style="font-size:22px;font-weight:800;color:var(--bl)">Rs 85K</div>
+        <div style="font-size:10px;color:var(--bl);margin-top:4px">/month · WA + OCC Standard</div>
+        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--bl);background:rgba(41,128,185,.1);border-radius:6px;padding:4px 8px">2.8× uplift from Tier 1</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--tx)">Customer handles queries two-way. Stickier, harder to churn.</div>
+      </div>
+      <div style="background:#FFF3E8;border-radius:10px;padding:14px;border-top:3px solid var(--or);text-align:center">
+        <div style="font-size:10px;font-weight:700;color:var(--or);margin-bottom:6px">FULL STACK — TIER 3</div>
+        <div style="font-size:22px;font-weight:800;color:var(--or)">Rs 500K</div>
+        <div style="font-size:10px;color:var(--or);margin-top:4px">/month · OCC Enterprise + GenAI</div>
+        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--or);background:rgba(232,119,34,.1);border-radius:6px;padding:4px 8px">16.7× uplift from Tier 1</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--tx)">Full AI automation. The customer is now deeply integrated — churn is near zero.</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:#EAFAF1;border-radius:8px;font-size:11px;color:var(--tx)">
+      <strong style="color:var(--gr)">💡 The strategic implication:</strong> A Manufacturing company starting at Rs 30K/month is worth Rs 500K/month if their business grows and you upsell them to Full Stack over 18-24 months. Closing a Tier 1 deal is not just Rs 30K — it's a Rs 500K option you've opened. This is why volume sectors like SME and Manufacturing are in the priority list despite low per-deal values.
+    </div>
+  </div>
+
+  <!-- ERV Table -->
+  <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:20px">
+    <div style="background:linear-gradient(135deg,var(--dk),var(--md));padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:#fff;font-size:14px;font-weight:700">💰 ERV by Sector — Full Pipeline Breakdown</span>
+      <span style="background:var(--or);color:#fff;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:600">Click sector to explore</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="meth-table" id="erv-table">
+        <tr>
+          <th>Sector</th><th>Companies</th><th>Tier</th><th>Two-Way</th>
+          <th>Conv. Rate</th><th>Avg MRC</th><th>Monthly ERV</th><th>ERV / Co.</th><th>Urgency</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Priority Radar -->
+  <div class="g2b">
+    <div class="card"><div class="ch"><h3>Segment Priority Radar</h3><span class="badge">4 dimensions</span></div><div class="cb"><div class="cw tall"><canvas id="priorityRadar"></canvas></div></div></div>
+    <div class="card"><div class="ch"><h3>Priority Rankings</h3><span class="badge">ERV + Strategic fit</span></div><div class="cb" id="priority-list"></div></div>
+  </div>
+
 </div>
 
 
@@ -676,73 +725,143 @@ new Chart(document.getElementById('botChart'),{
   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw.toLocaleString()} prospects`}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#F0F0F5'},ticks:{font:{size:10}}}}}
 });
 
-// WA+SMS Polar
-new Chart(document.getElementById('wasmsPolar'),{
-  type:'polarArea',
-  data:{
-    labels:['SME','Mfg','IT/Tech','Govt','Services','Education','Retail','Health','Banking','Real Estate'],
-    datasets:[{data:[1833,816,340,161,150,132,116,65,55,52],backgroundColor:colors14.map(c=>c+'CC'),borderColor:colors14,borderWidth:2}]
-  },
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:10},padding:8}}}}
-});
+// ======== ERV ENGINE ========
+// Average MRC per Tier (midpoint of pricing structure)
+const MRC_BY_TIER = {3: 500000, 2: 85000, 1: 30000};
 
-// Priority Radar
+// Urgency: competitor activity in sector
+const URGENCY = {
+  'Banking & Finance':'🔴 Act Now','IT/Technology':'🔴 Act Now','Fintech':'🔴 Act Now',
+  'Health':'🟡 3-6 Months','Education':'🟡 3-6 Months','Real Estate & Construction':'🟡 3-6 Months',
+  'Telecom Operator':'🔴 Act Now','Int. Telecom Operator':'🟡 3-6 Months',
+  'SME & Others':'🟢 12+ Months','Manufacturing':'🟢 12+ Months','Retail & Trade':'🟡 3-6 Months',
+  'Services':'🟢 12+ Months','Govt & SOE':'🟢 12+ Months','Energy, Mining, O&G':'🟢 12+ Months',
+  'UN/NGO/Diplomatic':'🟢 12+ Months','FMCG':'🟡 3-6 Months','Security':'🟢 12+ Months',
+  'Agri Business':'🟢 12+ Months','Tracking':'🟢 12+ Months','CVAS':'🟢 12+ Months',
+  'AMI':'🟢 12+ Months','Military':'🟢 12+ Months','Individual':'🟢 12+ Months',
+};
+
+function calcERV(ind) {
+  const count = (RAW[ind]||[]).length;
+  const m     = META[ind]||{};
+  const tier  = m.ervTier||1;
+  const sme   = (RAW['SME & Others']||[]).length||1730;
+  const conv  = Math.min(0.20, (count / sme) * 0.20);
+  const mrc   = MRC_BY_TIER[tier];
+  return { count, conv, mrc, erv: Math.round(count * conv * mrc), tier };
+}
+
+function fmtRs(n) {
+  if(n >= 10000000) return 'Rs '+(n/10000000).toFixed(1)+' Cr';
+  if(n >= 100000)   return 'Rs '+(n/100000).toFixed(1)+' L';
+  return 'Rs '+n.toLocaleString();
+}
+
+(function buildERVSection() {
+  const sectors = Object.keys(META).filter(k => k !== 'Untagged' && k !== 'Individual' && k !== 'Military' && (RAW[k]||[]).length > 0);
+  const data = sectors.map(ind => ({ ind, ...calcERV(ind) })).sort((a,b) => b.erv - a.erv);
+
+  // Summary banner
+  const totalERV = data.reduce((s,d) => s + d.erv, 0);
+  const t3ERV = data.filter(d=>d.tier===3).reduce((s,d)=>s+d.erv,0);
+  const t2ERV = data.filter(d=>d.tier===2).reduce((s,d)=>s+d.erv,0);
+  const t1ERV = data.filter(d=>d.tier===1).reduce((s,d)=>s+d.erv,0);
+  document.getElementById('erv-summary-banner').innerHTML = `
+    <div style="text-align:center">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px">TOTAL PIPELINE ERV</div>
+      <div style="font-size:26px;font-weight:800;color:var(--or)">${fmtRs(totalERV)}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">per month if converted</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px">TIER 3 PIPELINE</div>
+      <div style="font-size:26px;font-weight:800;color:#FF6B35">${fmtRs(t3ERV)}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">GenAI + OCC Full Stack</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px">TIER 2 PIPELINE</div>
+      <div style="font-size:26px;font-weight:800;color:#63B3ED">${fmtRs(t2ERV)}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">OCC + 2-Way Channels</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px">TIER 1 PIPELINE</div>
+      <div style="font-size:26px;font-weight:800;color:#A0AEC0">${fmtRs(t1ERV)}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:3px">Broadcast Only</div>
+    </div>`;
+
+  // ERV Table
+  const tierLabel = t => t===3?'<span class="tier-badge tier3">Tier 3</span>':t===2?'<span class="tier-badge tier2">Tier 2</span>':'<span class="tier-badge tier1">Tier 1</span>';
+  const twLabel   = tw => tw==='high'?'<span class="tier-badge tw-high-b">🟢 High</span>':tw==='mixed'?'<span class="tier-badge tw-mixed-b">🟡 Mixed</span>':'<span class="tier-badge tw-none-b">⚪ None</span>';
+  const maxERV = data[0]?.erv || 1;
+  document.getElementById('erv-table').innerHTML = `
+    <tr><th>Sector</th><th>Companies</th><th>Tier</th><th>Two-Way</th><th>Conv. Rate</th><th>Avg MRC</th><th>Monthly ERV</th><th>ERV / Co.</th><th>Urgency</th></tr>
+    ` + data.map((d,i) => {
+      const m = META[d.ind]||{};
+      const tw = m.twoWay||'none';
+      const pu = Math.round((d.erv / maxERV) * 100);
+      const urg = URGENCY[d.ind]||'🟢 12+ Months';
+      return `<tr style="cursor:pointer" onclick="openPanel('${d.ind}')" title="Click to explore ${d.ind}">
+        <td style="font-weight:700">${m.icon||'📌'} ${d.ind}</td>
+        <td style="text-align:center">${d.count.toLocaleString()}</td>
+        <td>${tierLabel(d.tier)}</td>
+        <td>${twLabel(tw)}</td>
+        <td style="text-align:center;font-weight:600">${(d.conv*100).toFixed(1)}%</td>
+        <td style="text-align:right;font-size:11px">${fmtRs(d.mrc)}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:6px;background:#F0F0F5;border-radius:3px;overflow:hidden"><div style="width:${pu}%;height:100%;background:${i<3?'var(--or)':i<6?'var(--bl)':'var(--mu)'};border-radius:3px"></div></div>
+            <span style="font-weight:700;color:${i<3?'var(--or)':i<6?'var(--bl)':'var(--tx)'};white-space:nowrap;min-width:70px;text-align:right">${fmtRs(d.erv)}</span>
+          </div>
+        </td>
+        <td style="text-align:center;font-weight:600;color:var(--mu)">${fmtRs(Math.round(d.erv/d.count))}</td>
+        <td style="font-size:10px;font-weight:700">${urg}</td>
+      </tr>`;
+  }).join('');
+
+  // Priority ranking (by composite: 60% ERV share + 40% top score)
+  const topSectors = data.slice(0,8);
+  document.getElementById('priority-list').innerHTML = topSectors.map((d,i) => {
+    const m = META[d.ind]||{icon:'📌',color:'#E87722'};
+    const rankColors = ['#E87722','#E67E22','#F39C12','#2980B9','#27AE60','#16A085','#8E44AD','#7F8C8D'];
+    return `<div class="priority-item" onclick="openPanel('${d.ind}')" style="cursor:pointer" title="Click to explore">
+      <div class="prank" style="background:${rankColors[i]||'#999'};font-size:13px">${i+1}</div>
+      <div class="pinfo">
+        <div class="nm">${m.icon} ${d.ind}</div>
+        <div class="ds">${d.count.toLocaleString()} cos · ${(d.conv*100).toFixed(1)}% conv · ${fmtRs(d.mrc)}/mo avg</div>
+      </div>
+      <div class="pscore" style="color:${rankColors[i]||'#999'};font-size:14px">${fmtRs(d.erv)}</div>
+    </div>`;
+  }).join('');
+})();
+
+// OCC List (updated with new counts)
+document.getElementById('occ-list').innerHTML = Object.keys(RAW)
+  .filter(k=>k!=='Untagged'&&META[k]&&(META[k].ervTier>=2||META[k].twoWay!=='none'))
+  .sort((a,b)=>(RAW[b]||[]).length-(RAW[a]||[]).length)
+  .slice(0,8)
+  .map(ind=>{
+    const n=(RAW[ind]||[]).length;
+    const max=Math.max(...Object.keys(RAW).filter(k=>k!=='Untagged').map(k=>(RAW[k]||[]).length));
+    return `<div class="occ-row" onclick="openPanel('${ind}')" style="cursor:pointer" title="Click to explore">
+      <span class="occ-ind">${ind}</span>
+      <div class="occ-bw"><div class="occ-bf" style="width:${Math.round(n/max*100)}%"></div></div>
+      <span class="occ-n">${n.toLocaleString()}</span>
+    </div>`;
+  }).join('');
+
+// Priority Radar (updated with corrected sector values)
 new Chart(document.getElementById('priorityRadar'),{
   type:'radar',
   data:{
-    labels:['Volume','Bot Fit','OCC Need','Email Fit','Deal Value','GenAI Fit'],
+    labels:['Volume','Two-Way Need','Deal Value','ERV Potential','GenAI Fit','Urgency'],
     datasets:[
-      {label:'Banking',data:[30,95,95,90,95,100],borderColor:'#E87722',backgroundColor:'rgba(232,119,34,.15)',pointBackgroundColor:'#E87722'},
-      {label:'Education',data:[60,80,80,85,70,30],borderColor:'#2980B9',backgroundColor:'rgba(41,128,185,.15)',pointBackgroundColor:'#2980B9'},
-      {label:'Health',data:[35,80,80,80,75,40],borderColor:'#27AE60',backgroundColor:'rgba(39,174,96,.15)',pointBackgroundColor:'#27AE60'},
-      {label:'SME',data:[100,75,75,30,50,10],borderColor:'#C0392B',backgroundColor:'rgba(192,57,43,.15)',pointBackgroundColor:'#C0392B'},
+      {label:'Banking',data:[15,100,100,60,100,100],borderColor:'#E87722',backgroundColor:'rgba(232,119,34,.15)',pointBackgroundColor:'#E87722'},
+      {label:'IT/Tech',data:[65,100,100,90,100,100],borderColor:'#2980B9',backgroundColor:'rgba(41,128,185,.15)',pointBackgroundColor:'#2980B9'},
+      {label:'SME',data:[100,50,17,100,0,20],borderColor:'#C0392B',backgroundColor:'rgba(192,57,43,.15)',pointBackgroundColor:'#C0392B'},
+      {label:'Health',data:[25,100,100,35,100,70],borderColor:'#27AE60',backgroundColor:'rgba(39,174,96,.15)',pointBackgroundColor:'#27AE60'},
     ]
   },
   options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,max:100,ticks:{font:{size:9}},pointLabels:{font:{size:10}}}},plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:8}}}}
 });
-
-// OCC List
-document.getElementById('occ-list').innerHTML = [
-  ['SME & Others',1833],['Manufacturing',816],['IT/Technology',340],['Govt & SOE',161],
-  ['Services',150],['Education',132],['Retail & Trade',116],['Banking & Finance',55]
-].map(([ind,n])=>`
-  <div class="occ-row" onclick="openPanel('${ind}')" style="cursor:pointer" title="Click to explore">
-    <span class="occ-ind">${ind}</span>
-    <div class="occ-bw"><div class="occ-bf" style="width:${Math.round(n/18.33)}%"></div></div>
-    <span class="occ-n">${n.toLocaleString()}</span>
-  </div>`).join('');
-
-// Email List
-document.getElementById('email-list').innerHTML = `
-  <p style="font-size:12px;color:var(--mu);margin-bottom:14px">Email broadens reach beyond WhatsApp/SMS — key upsell:</p>
-  ${[['Education','🎓',132,'#8E44AD','Admissions, fee notices, circulars'],
-     ['Health','🏥',65,'#27AE60','Reports, appointment confirmations'],
-     ['Banking & Finance','🏦',55,'#E87722','Statements, alerts, product offers'],
-     ['Real Estate & Construction','🏗️',52,'#E74C3C','Lead nurturing, project updates'],
-     ['Telecom Operator','📱',5,'#8E44AD','Service notifications, billing']
-  ].map(([n,ic,cnt,c,d])=>`
-  <div class="priority-item" onclick="openPanel('${n}')" style="cursor:pointer">
-    <div class="prank" style="background:${c}">${ic}</div>
-    <div class="pinfo"><div class="nm">${n}</div><div class="ds">${d}</div></div>
-    <div class="pscore" style="color:${c}">${cnt}</div>
-  </div>`).join('')}`;
-
-// Priority List
-document.getElementById('priority-list').innerHTML = [
-  ['Banking & Finance','🏦','#E87722',96,'55 companies · GenAI+OCC+WA+SMS+Email'],
-  ['SME & Others','🏪','#C0392B',91,'1,833 companies · Largest volume segment'],
-  ['Education','🎓','#2980B9',82,'132 companies · WA+SMS+Email'],
-  ['Health','🏥','#27AE60',79,'65 companies · WA+SMS+Email'],
-  ['Manufacturing','🏭','#8E44AD',74,'816 companies · WA+SMS'],
-  ['Real Estate & Construction','🏗️','#16A085',71,'52 companies · WA+Email'],
-  ['Govt & SOE','🏛️','#D35400',68,'161 companies · WA+SMS'],
-  ['Retail & Trade','🛒','#7F8C8D',65,'116 companies · WA+SMS'],
-].map(([n,ic,c,s,d])=>`
-  <div class="priority-item" onclick="openPanel('${n}')" style="cursor:pointer" title="Click to explore">
-    <div class="prank" style="background:${c}">${ic}</div>
-    <div class="pinfo"><div class="nm">${n}</div><div class="ds">${d}</div></div>
-    <div class="pscore" style="color:${c}">${s}</div>
-  </div>`).join('');
 
 // ======== INDUSTRY CARDS ========
 function renderIndCards(filter, btn) {
