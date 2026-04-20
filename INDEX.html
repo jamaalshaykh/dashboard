@@ -1000,186 +1000,66 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <!-- ══ THIS WEEK'S HIT LIST ══ -->
-  <div style="font-size:13px;font-weight:800;color:#2C2C3E;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:8px">
-      <span style="background:#2980B9;color:#fff;border-radius:6px;padding:2px 8px;font-size:10px">STEP 2</span>
-      This Week's Call Sheet — Best Company Per Sector
+  <!-- ══ CRM DEAL TRACKER BAR ══ -->
+  <div id="crm-tracker-bar" style="background:#fff;border:1px solid #E8E8F0;border-radius:12px;padding:14px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:13px;font-weight:800;color:#2C2C3E;display:flex;align-items:center;gap:8px">
+        <span style="background:#27AE60;color:#fff;border-radius:6px;padding:2px 8px;font-size:10px">STEP 2</span>
+        CRM Deal Tracker — All 200 Companies
+      </div>
+      <button onclick="exportCRMCSV()" style="background:var(--or);color:#fff;border:none;border-radius:16px;padding:6px 16px;font-size:11px;cursor:pointer;font-weight:700">📥 Export CSV</button>
     </div>
-    <button onclick="document.getElementById('full200wrap').style.display=document.getElementById('full200wrap').style.display==='none'?'':'none';this.textContent=this.textContent.includes('Show')?'Hide Full 200 ▲':'Show Full 200 ▼'" style="background:#F5F6FA;border:1px solid #E8E8F0;border-radius:16px;padding:5px 14px;font-size:11px;cursor:pointer;font-weight:600;color:#2C2C3E">Show Full 200 ▼</button>
-  </div>
-  <div style="background:#fff;border:1px solid #E8E8F0;border-radius:12px;overflow:hidden;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.04)">
-    <div style="padding:10px 16px;background:#F9F9FC;border-bottom:1px solid #F0F0F5;display:flex;gap:8px">
-      <button class="fbtn active" onclick="filterPresales('all',this)">All</button>
+    <!-- Stats counters -->
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:90px;background:#F5F6FA;border-radius:10px;padding:10px 14px;text-align:center">
+        <div id="crm-count-total" style="font-size:22px;font-weight:900;color:#2C2C3E">200</div>
+        <div style="font-size:10px;color:#8A8AA0;font-weight:600">TOTAL</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:#EBF5FB;border-radius:10px;padding:10px 14px;text-align:center">
+        <div id="crm-count-new" style="font-size:22px;font-weight:900;color:#2980B9">—</div>
+        <div style="font-size:10px;color:#2980B9;font-weight:600">NEW</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:#FFF9E6;border-radius:10px;padding:10px 14px;text-align:center">
+        <div id="crm-count-inprogress" style="font-size:22px;font-weight:900;color:#F39C12">—</div>
+        <div style="font-size:10px;color:#F39C12;font-weight:600">IN PROGRESS</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:#EAFAF1;border-radius:10px;padding:10px 14px;text-align:center">
+        <div id="crm-count-won" style="font-size:22px;font-weight:900;color:#27AE60">—</div>
+        <div style="font-size:10px;color:#27AE60;font-weight:600">WON</div>
+      </div>
+      <div style="flex:1;min-width:90px;background:#FDECEA;border-radius:10px;padding:10px 14px;text-align:center">
+        <div id="crm-count-lost" style="font-size:22px;font-weight:900;color:#E74C3C">—</div>
+        <div style="font-size:10px;color:#E74C3C;font-weight:600">LOST</div>
+      </div>
+    </div>
+    <!-- Filter bar -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:10px;color:#8A8AA0;font-weight:600;margin-right:4px">FILTER:</span>
+      <button class="fbtn active" onclick="filterByCRM('all',this)" id="crm-f-all">All</button>
+      <button class="fbtn" onclick="filterByCRM('New',this)" id="crm-f-new">🔵 New</button>
+      <button class="fbtn" onclick="filterByCRM('In Progress',this)" id="crm-f-inprog">🟡 In Progress</button>
+      <button class="fbtn" onclick="filterByCRM('Won',this)" id="crm-f-won">🟢 Won</button>
+      <button class="fbtn" onclick="filterByCRM('Lost',this)" id="crm-f-lost">🔴 Lost</button>
+      <span style="margin-left:8px;font-size:10px;color:#8A8AA0;font-weight:600">URGENCY:</span>
+      <button class="fbtn" onclick="filterPresales('all',this)">All</button>
       <button class="fbtn" onclick="filterPresales('act',this)">🔴 Act Now</button>
       <button class="fbtn" onclick="filterPresales('mid',this)">🟡 3–6 Mo</button>
       <button class="fbtn" onclick="filterPresales('t3',this)">Tier 3</button>
       <button class="fbtn" onclick="filterPresales('t2',this)">Tier 2</button>
     </div>
-    
-      <div class="ps-row" data-filters="act t3" onclick="openPanel('Banking & Finance')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#1</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">AL HAQ PROPERTY BANK</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🏦 Banking & Finance</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#FFF3E8;color:#E87722;border:1px solid #E87722;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T3</span>
-          <span style="color:#E74C3C;font-size:11px;font-weight:700">🔴 Act Now</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 500,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA OTP/Alerts →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="act t3" onclick="openPanel('IT/Technology')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#2</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">AIMZTRA INTERNATIONAL</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">💻 IT/Technology</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#FFF3E8;color:#E87722;border:1px solid #E87722;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T3</span>
-          <span style="color:#E74C3C;font-size:11px;font-weight:700">🔴 Act Now</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 500,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA OTP/Alerts →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="act t3" onclick="openPanel('Telecom Operator')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#3</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">EDOTCO TOWERS PAKISTAN PVT LTD</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">📱 Telecom Operator</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#FFF3E8;color:#E87722;border:1px solid #E87722;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T3</span>
-          <span style="color:#E74C3C;font-size:11px;font-weight:700">🔴 Act Now</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 500,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA OTP/Alerts →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="mid t3" onclick="openPanel('Health')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#4</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">AL SHIFA EYE HOSPITAL</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🏥 Health</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#FFF3E8;color:#E87722;border:1px solid #E87722;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T3</span>
-          <span style="color:#F39C12;font-size:11px;font-weight:700">🟡 3-6 Mo</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 500,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA OTP/Alerts →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="act t3" onclick="openPanel('Fintech')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#5</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">PAYNET PVT LTD</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">💳 Fintech</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#FFF3E8;color:#E87722;border:1px solid #E87722;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T3</span>
-          <span style="color:#E74C3C;font-size:11px;font-weight:700">🔴 Act Now</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 500,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA OTP/Alerts →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="mid t3" onclick="openPanel('Int. Telecom Operator')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#6</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ORANGE BUSINESS SERVICES PAKISTAN PVT LTD</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🌐 Int. Telecom Operator</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#FFF3E8;color:#E87722;border:1px solid #E87722;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T3</span>
-          <span style="color:#F39C12;font-size:11px;font-weight:700">🟡 3-6 Mo</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 500,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA OTP/Alerts →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="mid t2" onclick="openPanel('Education')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#7</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">AL HAMD ISLAMIC UNIVERSITY</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🎓 Education</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#EBF5FB;color:#2980B9;border:1px solid #2980B9;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T2</span>
-          <span style="color:#F39C12;font-size:11px;font-weight:700">🟡 3-6 Mo</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 85,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA Broadcast →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="mid t2" onclick="openPanel('Retail & Trade')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#8</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">TOYOTA AIRPORT MOTORS</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🛒 Retail & Trade</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#EBF5FB;color:#2980B9;border:1px solid #2980B9;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T2</span>
-          <span style="color:#F39C12;font-size:11px;font-weight:700">🟡 3-6 Mo</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 85,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA Broadcast →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters="mid t2" onclick="openPanel('Real Estate & Construction')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#9</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">PAKISTAN PROPERTY SERVICES</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🏗️ Real Estate & Construction</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#EBF5FB;color:#2980B9;border:1px solid #2980B9;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T2</span>
-          <span style="color:#F39C12;font-size:11px;font-weight:700">🟡 3-6 Mo</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 85,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA Broadcast →</div>
-        </div>
-      </div>
-      <div class="ps-row" data-filters=" t2" onclick="openPanel('SME & Others')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid #F0F0F5;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#F9F9FC'" onmouseout="this.style.background=''">
-        <div style="font-size:18px;font-weight:800;color:#2C2C3E;min-width:28px;text-align:center">#10</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:13px;color:#2C2C3E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">C/O ROYAL AIRPORT SERVICES</div>
-          <div style="font-size:11px;color:#8A8AA0;margin-top:2px">🏪 SME & Others</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-          <span style="background:#EBF5FB;color:#2980B9;border:1px solid #2980B9;border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700">T2</span>
-          <span style="color:#27AE60;font-size:11px;font-weight:700">🟢 12+ Mo</span>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:12px;font-weight:700;color:#E87722">Rs 85,000/mo</div>
-          <div style="font-size:10px;color:#8A8AA0;margin-top:2px">WA Broadcast →</div>
-        </div>
-      </div>
   </div>
 
   <!-- ══ METHODOLOGY REFERENCE STRIP ══ -->
   <div style="background:#F5F6FA;border-radius:8px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#8A8AA0;margin-bottom:16px">
     <span>📋 Selection criteria, composite score formula, and full 200-company breakdown →</span>
     <div style="display:flex;gap:8px">
-      <button onclick="document.getElementById('full200wrap').style.display='';document.getElementById('full200wrap').scrollIntoView({behavior:'smooth'})" style="background:#fff;border:1px solid #E8E8F0;border-radius:12px;padding:4px 12px;font-size:11px;cursor:pointer;font-weight:600;color:#2C2C3E">📊 All 200 Companies ↓</button>
+      <button onclick="document.getElementById('full200wrap').scrollIntoView({behavior:'smooth'})" style="background:#fff;border:1px solid #E8E8F0;border-radius:12px;padding:4px 12px;font-size:11px;cursor:pointer;font-weight:600;color:#2C2C3E">📊 All 200 Companies ↓</button>
       <button onclick="showTab('methodology',document.querySelector('[onclick*=methodology]'))" style="background:var(--or);color:#fff;border:none;border-radius:12px;padding:4px 12px;font-size:11px;cursor:pointer;font-weight:600">📋 Methodology →</button>
     </div>
   </div>
 
   <!-- ══ FULL 200 TABLE (collapsed) ══ -->
-  <div id="full200wrap" style="display:none">
+  <div id="full200wrap" style="">
 
     <!-- Full 200 company table -->
       <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden">
@@ -1197,6 +1077,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
           <th style="text-align:center">Avg Deal (MRC/mo)</th>
           <th>Recommended Approach</th>
           <th>Why This Company</th>
+          <th style="text-align:center;min-width:140px">CRM Status</th>
         </tr>
         
     <tr class="ps-row" data-filters="act t3 bank" onclick="openPanel('Banking & Finance')" style="cursor:pointer" title="Click to explore Banking & Finance">
@@ -4407,15 +4288,160 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 
 <script>
+/* ── CRM Deal Tracker ── */
+let _crmUrgencyFilter = 'all';
+let _crmStatusFilter  = 'all';
+
 function filterPresales(type, btn) {
-  document.querySelectorAll('.filter-bar .fbtn').forEach(b => b.classList.remove('active'));
+  // Clear urgency filter buttons (non-crm buttons in the bar)
+  document.querySelectorAll('#crm-tracker-bar .fbtn').forEach(b => {
+    if (!b.id || !b.id.startsWith('crm-f')) b.classList.remove('active');
+  });
   btn.classList.add('active');
-  document.querySelectorAll('.ps-row').forEach(row => {
-    if (type === 'all') { row.style.display = ''; return; }
-    const filters = row.dataset.filters || '';
-    row.style.display = filters.includes(type) ? '' : 'none';
+  _crmUrgencyFilter = type;
+  applyDualFilter();
+}
+
+function filterByCRM(status, btn) {
+  document.querySelectorAll('[id^="crm-f"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  _crmStatusFilter = status;
+  applyDualFilter();
+}
+
+function applyDualFilter() {
+  document.querySelectorAll('#presales-table tr.ps-row').forEach(row => {
+    const urgOk  = _crmUrgencyFilter === 'all' || (row.dataset.filters || '').includes(_crmUrgencyFilter);
+    const rowStatus = row.dataset.crmStatus || 'New';
+    const statOk = _crmStatusFilter === 'all' || rowStatus === _crmStatusFilter;
+    row.style.display = (urgOk && statOk) ? '' : 'none';
   });
 }
+
+function getCRMKey(row) {
+  const el = row.querySelector('td:nth-child(2) div');
+  return el ? 'crm2__' + el.textContent.trim() : null;
+}
+
+const CRM_COLORS = { New: '#2980B9', 'In Progress': '#F39C12', Won: '#27AE60', Lost: '#E74C3C' };
+
+function setCRMStatus(btn, status) {
+  // ── Stop the row's openPanel() from firing ──
+  if (window.event) window.event.stopPropagation();
+
+  const row = btn.closest('tr');
+  if (!row) return;
+  const key = getCRMKey(row);
+  if (!key) return;
+
+  localStorage.setItem(key, status);
+  row.dataset.crmStatus = status;
+
+  // ── Update every button's inline style so highlight is always visible ──
+  row.querySelectorAll('.crm-status-btn').forEach(b => {
+    const isActive = b.dataset.status === status;
+    const col = CRM_COLORS[b.dataset.status] || '#999';
+    b.style.background = isActive ? col : '#fff';
+    b.style.color      = isActive ? '#fff' : col;
+    b.style.boxShadow  = isActive ? '0 2px 6px rgba(0,0,0,0.25)' : '';
+    b.style.transform  = isActive ? 'scale(1.08)' : '';
+  });
+
+  // ── Row background tint ──
+  const bg = { Won: '#F0FFF4', Lost: '#FFF0F0', 'In Progress': '#FFFDE7', New: '' };
+  row.style.background = bg[status] || '';
+
+  updateCRMStats();
+  applyDualFilter();
+}
+
+function buildStatusCell(currentStatus) {
+  const statuses = [
+    { s: 'New',         label: 'New',    color: '#2980B9' },
+    { s: 'In Progress', label: 'Active', color: '#F39C12' },
+    { s: 'Won',         label: 'Won',    color: '#27AE60' },
+    { s: 'Lost',        label: 'Lost',   color: '#E74C3C' }
+  ];
+  return `<td style="text-align:center;padding:6px 4px;white-space:nowrap">
+    <div style="display:flex;gap:3px;justify-content:center;flex-wrap:wrap">
+      ${statuses.map(({s, label, color}) => {
+        const active = s === currentStatus;
+        return `<button class="crm-status-btn"
+          data-status="${s}"
+          onclick="event.stopPropagation();setCRMStatus(this,'${s}')"
+          style="border:1px solid ${color};border-radius:10px;padding:2px 7px;font-size:9px;font-weight:700;cursor:pointer;transition:all .15s;
+            background:${active ? color : '#fff'};
+            color:${active ? '#fff' : color};
+            box-shadow:${active ? '0 2px 6px rgba(0,0,0,0.25)' : 'none'};
+            transform:${active ? 'scale(1.08)' : 'scale(1)'}"
+          >${label}</button>`;
+      }).join('')}
+    </div>
+  </td>`;
+}
+
+function initCRM() {
+  const rows = document.querySelectorAll('#presales-table tr.ps-row');
+  rows.forEach(row => {
+    const key    = getCRMKey(row);
+    const stored = (key && localStorage.getItem(key)) || 'New';
+    row.dataset.crmStatus = stored;
+
+    // Inject status cell
+    const cell = document.createElement('td');
+    cell.innerHTML = buildStatusCell(stored).replace(/^<td[^>]*>/, '').replace(/<\/td>$/, '');
+    cell.style.cssText = 'text-align:center;padding:6px 4px;white-space:nowrap';
+    row.appendChild(cell);
+
+    // Apply row colour
+    const bg = { Won: '#F0FFF4', Lost: '#FFF0F0', 'In Progress': '#FFFDE7', New: '' };
+    row.style.background = bg[stored] || '';
+  });
+  updateCRMStats();
+}
+
+function updateCRMStats() {
+  const rows = document.querySelectorAll('#presales-table tr.ps-row');
+  let counts = { New: 0, 'In Progress': 0, Won: 0, Lost: 0 };
+  rows.forEach(r => {
+    const s = r.dataset.crmStatus || 'New';
+    if (counts[s] !== undefined) counts[s]++;
+  });
+  const total = rows.length;
+  const el = id => document.getElementById(id);
+  if (el('crm-count-total'))      el('crm-count-total').textContent      = total;
+  if (el('crm-count-new'))        el('crm-count-new').textContent        = counts['New']        || 0;
+  if (el('crm-count-inprogress')) el('crm-count-inprogress').textContent = counts['In Progress']|| 0;
+  if (el('crm-count-won'))        el('crm-count-won').textContent        = counts['Won']        || 0;
+  if (el('crm-count-lost'))       el('crm-count-lost').textContent       = counts['Lost']       || 0;
+}
+
+function exportCRMCSV() {
+  const rows = document.querySelectorAll('#presales-table tr.ps-row');
+  let csv = 'Rank,Company,Sector,Tier,Urgency,Deal Value (MRC/mo),Approach,CRM Status\n';
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    const rank     = (cells[0]?.textContent.trim()||'').replace(/,/g,'');
+    const nameDiv  = cells[1]?.querySelector('div');
+    const company  = (nameDiv?.textContent.trim()||'').replace(/,/g,' ');
+    const secDiv   = cells[1]?.querySelectorAll('div')[1];
+    const sector   = (secDiv?.textContent.trim()||'').replace(/,/g,' ');
+    const tier     = (cells[2]?.textContent.trim()||'').replace(/,/g,' ');
+    const urgency  = (cells[3]?.textContent.trim()||'').replace(/,/g,' ');
+    const deal     = (cells[4]?.textContent.trim()||'').replace(/,/g,' ');
+    const approach = (cells[5]?.textContent.trim()||'').replace(/,/g,' ');
+    const status   = row.dataset.crmStatus || 'New';
+    csv += `"${rank}","${company}","${sector}","${tier}","${urgency}","${deal}","${approach}","${status}"\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'PTCL_CPaaS_CRM_Pipeline.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function togglePresalesMethod() {
   const body = document.getElementById('presales-method-body');
   const btn  = document.getElementById('presales-method-btn');
@@ -4424,7 +4450,15 @@ function togglePresalesMethod() {
   body.style.display = hidden ? '' : 'none';
   btn.textContent = hidden ? 'Hide ▲' : 'Show ▼';
 }
+
+// Init CRM on load
+document.addEventListener('DOMContentLoaded', () => { initCRM(); });
 </script>
+
+<style>
+.crm-status-btn:hover { opacity: 0.85; transform: scale(1.05); }
+.crm-active { box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+</style>
   </div>
 
 </div>
